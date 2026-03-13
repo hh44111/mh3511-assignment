@@ -19,7 +19,8 @@ players <- read.csv("players.csv")
 players2 <- merge(appearances2, players, by = "player_id")
 players2 <- players2 %>%
   mutate(age = floor(time_length(interval(players2$date_of_birth, "2025-05-25"), "years"))) %>%
-  select(player_id, date_of_birth, position, sub_position, current_club_id, market_value_in_eur, 
+  mutate(market_value = market_value_in_eur * 1.47) %>%
+  select(player_id, date_of_birth, position, sub_position, current_club_id, market_value, 
          game_id, player_club_id, date, player_name, competition_id, minutes_played, age, goals, assists)
 View(players2)
 
