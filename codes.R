@@ -1,6 +1,7 @@
 library(tidyquant); library(tidyverse)
 library(lubridate)
 
+#filter appearances
 appearances <- read.csv("appearances.csv")
 View(appearances)
 summary(appearances)
@@ -16,7 +17,5 @@ appearances3 <- appearances2 %>%
 #  arrange(desc(dates)) %>%
 #  filter(filter(date >= start_date & date <= end_date)) %>%
   select(player_id, player_club_id, goals, assists, minutes_played, date)
-View(appearances3)
+View(appearances2)
 
-player_valuations <- read.csv("player_valuations.csv")
-View(player_valuations)
