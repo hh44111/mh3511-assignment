@@ -14,5 +14,5 @@ View(appearances2)
 
 appearances3 <- appearances2 %>% 
   select(player_id, player_club_id, goals, assists, minutes_played, date)
-View(appearances2)
+View(appearances3)
 
