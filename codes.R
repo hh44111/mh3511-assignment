@@ -16,10 +16,7 @@ appearances2 <- appearances2 %>%
 players <- read.csv("players.csv", header = TRUE)
 players2 <- merge(appearances2, players, by = "player_id")
 players2 <- players2 %>%
-  mutate(age = floor(time_length(interval(players2$date_of_birth, "2025-05-25"), "years"))) %>%
-  mutate(market_value = market_value_in_eur * 1.47) 
-
-
+  mutate(age = floor(time_length(interval(players2$date_of_birth, "2025-05-25"), "years"))) 
 
 clubs <- read.csv("clubs.csv", header = TRUE)
 colnames(clubs)[1] <- "player_club_id"
@@ -30,17 +27,19 @@ players2 <- merge(clubs, players2, by = "player_club_id")
 
 club_wins <- read.csv("club_games.csv", header = TRUE)
 club_wins2 <- merge(club_wins, players2, by = "game_id") %>%
-  select(player_id, sub_position, market_value, date, player_name, minutes_played, age, goals, assists, is_win)
+  select(player_id, sub_position, market_value_in_eur, player_name, minutes_played, goals, assists, is_win, age)
 View(club_wins2)
 
-players3 <- club_wins2 %>%
+player_data <- club_wins2 %>%
   group_by(player_name) %>%
-  summarise(total_minutes_played = sum(minutes_played),
+  summarise(player_id = first(player_id),
+            total_minutes_played = sum(minutes_played),
             total_goals = sum(goals),
             total_assists = sum(assists),
-            total_wins = sum(is_win)) %>%
-  mutate(total_goals_assists = total_goals + total_assists) %>%
-  select(-total_goals,-total_assists)
-View(players3)
-
-#hist(players2$market_value)
+            total_wins = sum(is_win),
+            sub_position = first(sub_position),
+            market_value_in_eur = first(market_value_in_eur),
+            age = first(age),
+            .groups = "drop"
+  )
+View(player_data) #final dataset to be used
