@@ -16,18 +16,19 @@ appearances2 <- appearances2 %>%
 players <- read.csv("players.csv", header = TRUE)
 players2 <- merge(appearances2, players, by = "player_id")
 players2 <- players2 %>%
-  mutate(age = floor(time_length(interval(players2$date_of_birth, "2025-05-25"), "years"))) 
+  mutate(age = floor(time_length(interval(players2$date_of_birth, "2025-05-25"), "years"))) %>%
+  select(player_id, sub_position, market_value_in_eur, player_name, player_club_id, game_id, minutes_played, goals, assists, age)
 
 clubs <- read.csv("clubs.csv", header = TRUE)
 colnames(clubs)[1] <- "player_club_id"
 clubs <- select(clubs, player_club_id, name)
 View(clubs)
 players2 <- merge(clubs, players2, by = "player_club_id")
-
+View(players2)
 
 club_wins <- read.csv("club_games.csv", header = TRUE)
 club_wins2 <- merge(club_wins, players2, by = "game_id") %>%
-  select(player_id, sub_position, market_value_in_eur, player_name, minutes_played, goals, assists, is_win, age)
+  select(name, player_id, sub_position, market_value_in_eur, player_name, minutes_played, goals, assists, is_win, age)
 View(club_wins2)
 
 player_data <- club_wins2 %>%
@@ -40,6 +41,11 @@ player_data <- club_wins2 %>%
             sub_position = first(sub_position),
             market_value_in_eur = first(market_value_in_eur),
             age = first(age),
+            club = first(name),
+            
             .groups = "drop"
-  )
+  ) %>%
+  filter(market_value_in_eur >= 1000000)
 View(player_data) #final dataset to be used
+
+
